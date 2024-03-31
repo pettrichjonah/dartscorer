@@ -1,0 +1,208 @@
+@font-face {
+  font-family: "maincontent";
+  src: local("font.ttf"),
+    url("./font.ttf") format("truetype");
+}
+
+* {
+  font-family: maincontent;
+}
+#root {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #17181a;
+}
+#navbar {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+#continuegamebtn {
+  display: none;
+  width: 100px;
+  height: 30px;
+  background-color: #198754;
+  border-style: none;
+  transition: 0.2s;
+  color: #dbdcdd;
+  margin-right: 10px;
+  border-radius: 0.5vh;
+  margin:auto;
+}
+#continuegamebtn:hover {
+  opacity: 0.8;
+}
+#resetgamebtn {
+  width: 100px;
+  height: 30px;
+  background-color: #DC4C64;
+  border-style: none;
+  transition: 0.2s;
+  color: #dbdcdd;
+  margin-right: 10px;
+  border-radius: 0.5vh;
+}
+#resetgamebtn:hover {
+  opacity: 0.8;
+}
+#navtitle {
+  font-size: 30px;
+  font-weight: bold;
+  margin-left: 15px;
+}
+#activegameui {
+  height: 80%;
+  width: 80%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+}
+p {
+  color: #dbdcdd;
+}
+#activegameinfo {
+  width: 70%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+#currentscorediv {
+  width: 100%;
+  height: 30%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#currentscorevalue {
+  font-size: 70px;
+}
+#playerlist {
+  min-width: 50%;
+  height: 70%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+.playerprofile {
+  min-width: 20%;
+  min-height: 40%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  background-color: #35373c;
+  border-radius: 5px;
+}
+.playername {
+  font-size: 30px;
+  font-weight: bold;
+}
+.playerscore {
+  font-size: 30px;
+}
+#scorepad {
+  width: 40%;
+  height: 60%;
+  box-shadow: 20px solid black;
+  align-self:first baseline
+}
+.scorepadrow {
+  width: 100%;
+  height: 20%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+.dartscores {
+  font-size: 30px;
+}
+.scorepadbtn {
+  min-width: 20%;
+  height: 100%;
+  background-color: #35373c;
+  border-style: none;
+  transition: 0.2s;
+  color: #dbdcdd;
+  font-size: 20px;
+}
+.standardbtn {
+  min-width: 20%;
+}
+.multibtn {
+  width: 50%;
+  background-color: #6c757d;
+}
+.multibtnactive {
+  background-color: #198754;
+}
+.backbtn {
+  color: #35373c;
+  background-color: #E4A11B;
+}
+.scorepadbtn:hover, .scorepadbtnmulti:hover {
+  opacity: 0.8;
+  font-size: 25px;
+}
+.leftupperbtn {
+  border-top-left-radius: 0.5vh;
+}
+.rightupperbtn {
+  border-top-right-radius: 0.5vh;
+}
+.leftlowerbtn {
+  border-bottom-left-radius: 0.5vh;
+}
+.rightlowerbtn {
+  border-bottom-right-radius: 0.5vh;
+}
+
+@media screen and (max-width: 1100px) { /*-- phone --*/
+	#activegameui {
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+  }
+  #activegameinfo {
+    width: 100%;
+    height: 30%;
+  }
+  #currentscorediv {
+    width: 100%;
+    height: 30%;
+  }
+  #playerlist {
+    width: 100%;
+    height: 30%;
+  }
+  .playerprofile {
+    width: auto;
+    min-height: 0%;
+  }
+  .playername {
+    font-size: 20px;
+  }
+  .playerscore {
+    font-size: 20px;
+  }
+  #scorepad {
+    width: 100%;
+    height: 60%;  
+  }
+  .scorepadrow {
+    width: 100%;
+    height: 15%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+}
