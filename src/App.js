@@ -7,12 +7,13 @@ function App() {
   const startfrom = 301
 
   let [activeplayerid, setActivePlayerID] = useState(0)
-  var [players, setPlayers] = useState(['JP', 'Wandlos', 'Testos']) //contains all playernames
+  var [players, setPlayers] = useState(['Player1', 'Player2', 'Player3']) //contains all playernames
   var [scores, setScores] = useState([startfrom, startfrom, startfrom])
 
   let [shotcount, setShotCount] = useState(0) //represents first, second or third shot
   let [threedartscores, setThreeDartScores] = useState(["1st","2nd","3rd"]); //saves all three scores combined
   let [multiplicator, setMultiplicator] = useState(1);
+  var tempinput = 0//stores the numvalues for doubledigit inputs
   
   function handleClick(shotscore) { //handles the score inputs from the ScorePad buttons - each shot/pad-entry calls this function
     if(shotscore!='back') //if the shot score is a number, proceed with the operation
@@ -40,7 +41,7 @@ function App() {
     }   
   }
 
-  function updateThreeDartScoreArray(shotscore, shotcount) { //updates the tree values in the upper scorepad row
+  function updateThreeDartScoreArray(shotscore, shotcount) { //updates the storage array for the three darts; is being updated live at the top scorepad row
     let helparray = threedartscores.slice();
     
     if(0<shotscore<60)
@@ -91,7 +92,7 @@ function App() {
     {
       alert('Dont forget the double out!')
     }
-    else if (scores[activeplayerid]<=0)
+    else if (scores[activeplayerid]<0)
     { 
       alert('You shot too much!')
     }
@@ -161,10 +162,47 @@ function App() {
       alert('No cheaters allowed')
   }
 
+  function keyInputHandler(e) { //for security, tempinput will always be set to 0 after "confirmation"-inputs
+    if(e.key=='Enter') {
+      if(shotcount!=3) {
+        handleClick(tempinput)
+        tempinput = 0
+      }
+      else //triggers the continueGame-function only if the last dart has been shot
+        continueGame()
+    }
+    else if(e.key=='Backspace') {
+      handleClick('back')
+      tempinput = 0
+    }
+    else if(e.key=='Escape') {
+      resetGame()
+      tempinput = 0
+    }
+    else if(e.key=='Alt') { //to prevent throwing a message when pressing Alt-Tab
+      //do nothing
+    }
+    else if(e.key=='F5') { //to prevent throwing a message when pressing F5
+      //do nothing
+    }
+    else if(e.key=='Control') { //to prevent throwing a message when pressing Ctrl
+      //do nothing
+    }
+    else if(isFinite(e.key)){ //checks if input is a number
+      tempinput = tempinput + '' + e.key //simply appends the input key to the existing value
+      
+      if(tempinput>60) { //score shot with one dart can't be higher than 60
+        alert('No cheaters allowed')
+      }
+    }
+    else
+      alert('Input incorrect!')
+  }
+
   return (
     <>
-      <NavBar resetGame={resetGame} continueGame={continueGame}/>
-      <ActiveGameUI players={players} scores={scores} activeplayerid={activeplayerid} handleClick={handleClick} updateMultiplicator={updateMultiplicator} threedartscores={threedartscores}/>
+    <NavBar resetGame={resetGame} continueGame={continueGame}/>
+    <ActiveGameUI keyinputhandler={keyInputHandler} players={players} scores={scores} activeplayerid={activeplayerid} handleClick={handleClick} updateMultiplicator={updateMultiplicator} threedartscores={threedartscores}/>
     </>
   );
 }
@@ -179,9 +217,9 @@ function NavBar({resetGame, continueGame}) {
   );
 }
 
-function ActiveGameUI({players, scores, activeplayerid, handleClick, updateMultiplicator, threedartscores}) {
+function ActiveGameUI({keyinputhandler, players, scores, activeplayerid, handleClick, updateMultiplicator, threedartscores}) {
   return (
-    <div id='activegameui'>
+    <div id='activegameui' onKeyDown={keyinputhandler} tabIndex={-1}>
       <div id='activegameinfo'>
         <CurrentScore scores={scores} activeplayerid={activeplayerid}/>
         <PlayerList players={players} scores={scores}/>        
@@ -203,7 +241,7 @@ function PlayerList({players, scores}) {
   return (
     <div id='playerlist'>
       {players.map((player, id) => (
-        <PlayerProfile key={player.name} name={player} score={scores[id]}/>
+        <PlayerProfile key={id} name={player} score={scores[id]}/>
       ))}
     </div>
   );
