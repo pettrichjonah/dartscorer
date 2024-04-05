@@ -1,5 +1,6 @@
 import './App.css';
 import { useState } from 'react';
+import { useRef } from 'react';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 
@@ -13,7 +14,7 @@ function App() {
   let [shotcount, setShotCount] = useState(0) //represents first, second or third shot
   let [threedartscores, setThreeDartScores] = useState(["1st","2nd","3rd"]); //saves all three scores combined
   let [multiplicator, setMultiplicator] = useState(1);
-  var tempinput = 0//stores the numvalues for doubledigit inputs
+  var tempinput = 0 //stores the numvalues for doubledigit inputs
   
   function handleClick(shotscore) { //handles the score inputs from the ScorePad buttons - each shot/pad-entry calls this function
     if(shotscore!='back') //if the shot score is a number, proceed with the operation
@@ -24,8 +25,7 @@ function App() {
 
       let helpscorearray = scores.slice();
       helpscorearray[activeplayerid] = scores[activeplayerid] - shotscore * multiplicator
-      setScores(helpscorearray) //updates the new overall score
-
+      setScores(()=>helpscorearray) //updates the new overall score
       calculateWinner(activeplayerid)   
       updateMultiplicator(1);
 
@@ -37,6 +37,7 @@ function App() {
     }
     else { //if the input is 'back', go back to the last move
       updateShotCount(false)
+      updateActivePlayerID(false)
       updateThreeDartScoreArray(shotscore, shotcount)
     }   
   }
@@ -68,18 +69,29 @@ function App() {
     }
   }
 
-  function updateActivePlayerID(direction) { //if true value is passed, raise shotcount, if not, lower 
+  function updateActivePlayerID(direction) { //if true value is passed, raise shotcount, if not, lower     
+    document.getElementById('player'+activeplayerid).style.backgroundColor = '#35373c'
+    let nextplayerid //temporary variable to save nextplayerid for bg color change
+
     if(direction) {
       setActivePlayerID(() => activeplayerid + 1)
+      nextplayerid = activeplayerid + 1
     }
     else if (!direction) {
       setActivePlayerID(() => activeplayerid - 1)
+      nextplayerid = activeplayerid - 1
     }
 
     if(activeplayerid==players.length-1)
     {
       setActivePlayerID(0)
     }
+
+    if(activeplayerid==2) {
+      nextplayerid=0
+    }
+
+    document.getElementById('player'+nextplayerid).style.backgroundColor = '#198754'
   }
 
   function calculateWinner(activeplayerid) {
@@ -91,10 +103,12 @@ function App() {
     else if (scores[activeplayerid]==0 && multiplicator!=2)
     {
       alert('Dont forget the double out!')
+      handleClick('back')
     }
     else if (scores[activeplayerid]<0)
     { 
       alert('You shot too much!')
+      handleClick('back')
     }
   }
 
@@ -144,6 +158,11 @@ function App() {
     setActivePlayerID(0)
     updateMultiplicator(1)
     document.getElementById('continuegamebtn').style.display ='none';
+
+    for(let i = 0; i<players.length; i++) { //resets all player profiles to standard color
+      document.getElementById('player' + i).style.backgroundColor = '#35373c'
+    }
+    document.getElementById('player0').style.backgroundColor = '#198754'
   }
 
   function continueGame() { //shows the scorepad and hides the nextplayerbutton
@@ -193,11 +212,13 @@ function App() {
       
       if(tempinput>60) { //score shot with one dart can't be higher than 60
         alert('No cheaters allowed')
+        tempinput=0
       }
     }
     else
       alert('Input incorrect!')
   }
+
 
   return (
     <>
@@ -241,15 +262,15 @@ function PlayerList({players, scores}) {
   return (
     <div id='playerlist'>
       {players.map((player, id) => (
-        <PlayerProfile key={id} name={player} score={scores[id]}/>
+        <PlayerProfile id={id} name={player} score={scores[id]}/>
       ))}
     </div>
   );
 }
 
-function PlayerProfile({name,score}) {
+function PlayerProfile({id, name,score}) {
   return (
-    <div className='playerprofile'>
+    <div className='playerprofile' id={'player' + id}>
       <p className='playername'>{name}</p>
       <p className='playerscore'>{score}</p>
     </div>
